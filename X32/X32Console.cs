@@ -31,7 +31,7 @@ namespace Behringer.X32
         public event X32OSCDelegate OnChannelColor;
         public event X32OSCDelegate OnChannelSource;
         public event X32OSCDelegate OnChannelDelay;
-        public event X32OSCDelegate OnChannelDelayTime;        
+        public event X32OSCDelegate OnChannelDelayTime;
         public event X32OSCDelegate OnChannelGate;
         public event X32OSCDelegate OnChannelGateMode;
         public event X32OSCDelegate OnChannelGateThreshold;
@@ -262,7 +262,7 @@ namespace Behringer.X32
         public event X32OSCDelegate OnOutputPosition;
         public event X32OSCDelegate OnOutputDelay;
         public event X32OSCDelegate OnOutputDelayTime;
-        
+
         public event X32OSCDelegate OnHeadAmpGain;
         public event X32OSCDelegate OnHeadAmpPhantom;
 
@@ -273,7 +273,7 @@ namespace Behringer.X32
         {
             if (del != null)
                 del(this, packet);
-        }    
+        }
 
         protected override void ParseOSCPacket(object sender, OSCPacket packet)
         {
@@ -297,12 +297,12 @@ namespace Behringer.X32
                         Connected = true;
                         RaiseOnConnect();
                     }
-                    else if (packet.Address.Substring(0,8) == "/meters/")                    
+                    else if (packet.Address.Length > 7 && packet.Address.Substring(0, 8) == "/meters/")
                         RaiseOSCEvent(OnMeter, packet);
                     DetermineConsoleFunction(packet);
                 }
-                
-            }            
+
+            }
 
         }
 
@@ -403,11 +403,11 @@ namespace Behringer.X32
                         mainOutput[channel].Delay.Time.Value = packet.Arguments[0].ToFloat();
                         RaiseOSCEvent(OnOutputDelayTime, packet);
                     }
-                    
+
                 }
-                
+
             }
-            
+
         }
         # endregion
 
@@ -436,14 +436,14 @@ namespace Behringer.X32
                     Fx[channel].SourceRight.Value = packet.Arguments[0].ToInt();
                     RaiseOSCEvent(OnFxSourceRight, packet);
                 }
-           
+
             }
             else if (command == "par")
             {
                 int param = Convert.ToInt32(packet.Nodes[4]);
                 Fx[channel].Params[param].Value = packet.Arguments[0].ToFloat();
                 RaiseOSCEvent(OnFxParam, packet);
-            }              
+            }
 
         }
         #endregion
@@ -507,7 +507,7 @@ namespace Behringer.X32
             {
                 command = packet.Nodes[5];
                 int band = Convert.ToInt32(packet.Nodes[4]);
-                band--; 
+                band--;
 
                 if (command == "type")
                 {
@@ -741,7 +741,7 @@ namespace Behringer.X32
         {
             string command = packet.Nodes[4];
             if (command == "on")
-            {   
+            {
                 Main.Strip.Eq.Active.Value = (X32OnOff)packet.Arguments[0].ToInt();
                 RaiseOSCEvent(OnMainEQ, packet);
             }
@@ -1220,7 +1220,7 @@ namespace Behringer.X32
         }
 
         private void PerformBusEQActions(OSCPacket packet)
-        {            
+        {
             int channel = Convert.ToInt32(packet.Nodes[2]);
             string command = packet.Nodes[4];
             if (command == "on")
@@ -1837,7 +1837,7 @@ namespace Behringer.X32
                 RaiseOSCEvent(OnChannelEQ, packet);
             }
             else
-            {                
+            {
                 command = packet.Nodes[5];
                 int band = Convert.ToInt32(packet.Nodes[4]);
                 band--; channel--;
@@ -2152,32 +2152,32 @@ namespace Behringer.X32
                 if (command == "fader")
                 {
                     Channel[channel].Strip.Fader.Value = packet.Arguments[0].ToFloat();
-                    RaiseOSCEvent(OnChannelFade, packet);                    
+                    RaiseOSCEvent(OnChannelFade, packet);
                 }
                 else if (command == "on")
                 {
                     Channel[channel].Strip.Mute.Value = (X32OnOff)packet.Arguments[0].ToInt();
-                    RaiseOSCEvent(OnChannelMute, packet);                    
+                    RaiseOSCEvent(OnChannelMute, packet);
                 }
                 else if (command == "st")
                 {
                     Channel[channel].Strip.Link.Value = (X32OnOff)packet.Arguments[0].ToInt();
-                    RaiseOSCEvent(OnChannelLink, packet);                    
+                    RaiseOSCEvent(OnChannelLink, packet);
                 }
                 else if (command == "pan")
                 {
                     Channel[channel].Strip.Pan.Value = packet.Arguments[0].ToFloat();
-                    RaiseOSCEvent(OnChannelPan, packet);                    
+                    RaiseOSCEvent(OnChannelPan, packet);
                 }
                 else if (command == "mono")
                 {
                     Channel[channel].Strip.MonoSend.Value = (X32OnOff)packet.Arguments[0].ToInt();
-                    RaiseOSCEvent(OnChannelSendToMono, packet);                    
+                    RaiseOSCEvent(OnChannelSendToMono, packet);
                 }
                 else if (command == "mlevel")
                 {
                     Channel[channel].Strip.MonoFader.Value = packet.Arguments[0].ToFloat();
-                    RaiseOSCEvent(OnChannelMonoLevel, packet);                    
+                    RaiseOSCEvent(OnChannelMonoLevel, packet);
                 }
             }
         }
@@ -2192,22 +2192,22 @@ namespace Behringer.X32
             if (command == "on")
             {
                 Channel[channel].Strip.MixBuss[mix].Mute.Value = (X32OnOff)packet.Arguments[0].ToInt();
-                RaiseOSCEvent(OnChannelSendMute, packet);                
+                RaiseOSCEvent(OnChannelSendMute, packet);
             }
             else if (command == "level")
             {
                 Channel[channel].Strip.MixBuss[mix].Fader.Value = packet.Arguments[0].ToFloat();
-                RaiseOSCEvent(OnChannelSendLevel, packet);                
+                RaiseOSCEvent(OnChannelSendLevel, packet);
             }
             else if (command == "pan")
             {
                 Channel[channel].Strip.MixBuss[mix].Pan.Value = packet.Arguments[0].ToFloat();
-                RaiseOSCEvent(OnChannelSendPan, packet);                
+                RaiseOSCEvent(OnChannelSendPan, packet);
             }
             else if (command == "type")
             {
                 Channel[channel].Strip.MixBuss[mix].TapPoint.Value = (X32TapType)packet.Arguments[0].ToInt();
-                RaiseOSCEvent(OnChannelSendType, packet);                
+                RaiseOSCEvent(OnChannelSendType, packet);
             }
         }
 
