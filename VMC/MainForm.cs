@@ -23,7 +23,7 @@ namespace VMC
             X32.OnConnect += OnConnect;
             X32.OnMeter += X32_OnMeter;      
             
-            X32.Connect("192.168.1.3");
+            X32.Connect("192.168.1.100");
         }
 
         void X32_OnChannelMute(object sender, OSCPacket packet)
